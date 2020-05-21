@@ -114,4 +114,40 @@ def get_KB(KB_file, ent2id, rel2id):
         KBmatrix[h*nrels+r, lenlist] = t
         tails[h*nrels+r] += 1
 
-    return np.array(Triples), KBmatrix[:1, :np.min(tails)], np.min(tails)
+    return np.array(Triples), KBmatrix[:1, :np.min(tails)], np.min(tails)   //# FIXME
+
+
+def read_data(data_file):
+
+
+    if os.path.isfile(data_file):
+        with open(data_file) as f:
+            lines = f.readlines()
+    else:
+        raise Exception("!! %s is not found!!" % data_file)
+
+    words = set()
+    data = []
+    questions = []
+    doc = []
+
+    for line in lines:
+        line = line.strip().split('\t')
+        qlist = line[0].strip().split()
+        k = line[1].find('(')
+        if not k == -1:
+            if line[1][k-1] == '_':
+                k += (line[1][k+1:-1].find('(') + 1)
+            asset = line[1][k+1:-1]
+            line[1] = line[1][:k]
+        else:
+            asset = line[3]
+        data.append([line[0], line[1], line[2], asset])
+
+        for w in qlist:
+            words.add(w)
+        questions.append(qlist)
+
+    sentence_size = max(len(i) for i in questions)
+
+    return words, data, sentence_size
