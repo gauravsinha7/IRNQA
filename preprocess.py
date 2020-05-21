@@ -119,6 +119,10 @@ def get_KB(KB_file, ent2id, rel2id):
 
 def read_data(data_file):
 
+    # q+'\t'+ans+'\t'+p+'\t'+ansset+'\t'+c+'\t'+sub+'\n'
+    # question \t ans(ans1/ans2/) \t e1#r1#e2#r2#e3#<end>#e3
+    # question \t  ans  \t  e1#r1#e2#r2#e3#<end>#e3  \t   ans1/ans2/   \t   e1#r1#e2///e2#r2#e3#///s#r#t///s#r#t
+
 
     if os.path.isfile(data_file):
         with open(data_file) as f:
