@@ -94,3 +94,24 @@ def read_KB(KB_file):
         entities.add(line[2])
         relations.add(line[1])
     return entities, relations
+
+
+def get_KB(KB_file, ent2id, rel2id):
+    nwords = len(ent2id)
+    nrels = len(rel2id)
+    tails = np.zeros([nwords*nrels, 1], 'int32')
+    KBmatrix = np.zeros([nwords * nrels, nwords], 'int32')
+    Triples = []
+
+    f = open(KB_file)
+    for line in f.readlines():
+        line = line.strip().split('\t')
+        h = ent2id[line[0]]
+        r = rel2id[line[1]]
+        t = ent2id[line[2]]
+        Triples.append([h, r, t])
+        lenlist = tails[h*nrels+r]
+        KBmatrix[h*nrels+r, lenlist] = t
+        tails[h*nrels+r] += 1
+
+    return np.array(Triples), KBmatrix[:, :np.max(tails)], np.max(tails)
