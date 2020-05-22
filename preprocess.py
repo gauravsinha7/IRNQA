@@ -114,7 +114,7 @@ def get_KB(KB_file, ent2id, rel2id):
         KBmatrix[h*nrels+r, lenlist] = t
         tails[h*nrels+r] += 1
 
-    return np.array(Triples), KBmatrix[:1, :np.min(tails)], np.min(tails)   //# FIXME
+    return np.array(Triples), KBmatrix[:, :np.max(tails)], np.max(tails)   //# FIXME
 
 
 def read_data(data_file):
