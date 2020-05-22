@@ -266,3 +266,21 @@ def MultiAcc(labels,preds,length):
             correct += 1.0   #final answer accuracy
     Acc.append(round( correct/batch_size ,3))
     return Acc
+
+def InSet(labels,anset,preds):
+
+    right = 0.0
+    for i in range(len(anset)):
+        if type(preds[i]) is np.int64:
+            ans_pred = preds[i]
+        else:
+            ans_pred = preds[i,-1]
+            '''
+            k = len(labels[0]) - 1
+            while(labels[i,k]==0):
+                k -= 2
+            ans_pred = preds[i,k]
+            '''
+        if ans_pred in anset[i]:
+            right += 1
+    return round(right/len(anset), 3)
