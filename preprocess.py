@@ -155,3 +155,9 @@ def read_data(data_file):
     sentence_size = max(len(i) for i in questions)
 
     return words, data, sentence_size
+
+
+
+def tokenize(sent):
+    
+    return [x.strip() for x in re.split('(\W+)?', sent) if x.strip()]
