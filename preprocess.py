@@ -268,7 +268,10 @@ def MultiAcc(labels,preds,length):
     return Acc
 
 def InSet(labels,anset,preds):
-
+    #get accuracy(whether in answer set or not)
+    #labels does not matter
+    #preds is path-list
+    #labels is path-labels
     right = 0.0
     for i in range(len(anset)):
         if type(preds[i]) is np.int64:
