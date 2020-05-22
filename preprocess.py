@@ -159,5 +159,8 @@ def read_data(data_file):
 
 
 def tokenize(sent):
-    
+    '''Return the tokens of a sentence including punctuation.
+    >>> tokenize('Bob dropped the apple. Where is the apple?')
+    ['Bob', 'dropped', 'the', 'apple', '.', 'Where', 'is', 'the', 'apple', '?']
+    '''
     return [x.strip() for x in re.split('(\W+)?', sent) if x.strip()]
