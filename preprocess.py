@@ -246,3 +246,23 @@ def process_data(KB_file, data_file):
         SS.append(anset)
 
     return np.array(Q), np.array(A), np.array(P), np.array(S), Triples, sentence_size, word2id, ent2id, rel2id
+
+
+def MultiAcc(labels,preds,length):
+    #length = path = 2 * hop + 1   (hop == path_l + cons_l + final == path_l * 2 + 1 )
+    #compare path and final answer accuracy
+    Acc = []
+    #Acc=np.asarray(Acc)
+    for i in range(length):
+        Acc.append(round(metrics.accuracy_score(labels[:,i],preds[:,i]),3))
+
+    batch_size = preds.shape[0]
+    correct = 0.0
+    for j in range(batch_size):
+        k = length - 1
+        while(labels[j,k]==0):
+            k -= 2
+        if(labels[j,k]==preds[j,k]):
+            correct += 1.0   #final answer accuracy
+    Acc.append(round( correct/batch_size ,3))
+    return Acc
