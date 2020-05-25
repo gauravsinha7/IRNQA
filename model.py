@@ -143,3 +143,53 @@ class IRN(nn.Module):
 
         loss = torch.sum(loss)
         return loss
+
+    def batch_fit(self, KBs, queries, answers, answers_id, paths):
+        nexample = queries.shape[0]
+        keys = np.repeat(np.reshape(np.arange(self._rel_size), [1, -1]),
+                         nexample,
+                         axis=0)
+        pad = np.arange(nexample)
+        ones = np.ones(nexample)
+        zeros = np.zeros(nexample)
+        print(self.Q)
+        loss = torch.Tensor(zeros).unsqueeze(1)
+        s_index = torch.Tensor(paths[:, 0]).unsqueeze(1)
+        q_emb = self.Q[torch.LongTensor(queries)]
+        q = torch.sum(q_emb, dim=1)
+        state = self.E[s_index.long()].squeeze(1)
+        p = s_index
+        for hop in range(self._hops):
+            step = 2 * hop
+            gate = torch.matmul(q, torch.matmul(self.R, self.Mrq).t())+torch.matmul(state, torch.matmul(self.R, self.Mrs).t())
+            rel_logits = gate
+            r_index = torch.argmax(rel_logits, dim=1)
+            gate = torch.softmax(gate,dim=1)
+            real_rel_onehot = torch.Tensor(paths[:, step + 1])
+
+            predict_rel_onehot = torch.nn.functional.one_hot(r_index, num_classes=self._rel_size)
+            state = state + torch.matmul(gate, torch.matmul(self.R, self.Mrs))
+            critrion = nn.CrossEntropyLoss(reduce=False)
+            loss += critrion(rel_logits, real_rel_onehot.long()).unsqueeze(1)
+
+            q = q - torch.matmul(gate, torch.matmul(self.R, self.Mrq))
+            value = torch.matmul(state, self.Mse)
+            ans = torch.matmul(value, self.E.t())
+            t_index = torch.argmax(ans, dim=1).float()
+            r_index = r_index.float()
+            t_index = r_index/(r_index+1e-15)*t_index + \
+                (1-r_index/(r_index+1e-15)) * p[:, -1].float()
+
+            p = torch.cat((p, r_index.float().view(-1, 1)), dim=1)
+            p = torch.cat((p, t_index.float().view(-1, 1)), dim=1)
+
+            real_ans_onehot = torch.Tensor(paths[:, step + 2])
+            loss += critrion(ans, real_ans_onehot.long()).unsqueeze(1)
+
+        loss = torch.sum(loss)
+
+        self.E.data = self.E.data / (torch.pow(self.E.data, 2).sum(dim=1, keepdim=True))
+        self.R.data = self.R.data / (torch.pow(self.R.data, 2).sum(dim=1, keepdim=True))
+        self.Q.data = self.Q.data / (torch.pow(self.Q.data, 2).sum(dim=1, keepdim=True))
+
+        return loss
