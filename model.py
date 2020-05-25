@@ -72,3 +72,42 @@ class IRN(nn.Module):
         self.R.data = self.R.data / (torch.pow(self.R.data, 2).sum(dim=1, keepdim=True))
         self.Q.data = self.Q.data / (torch.pow(self.Q.data, 2).sum(dim=1, keepdim=True))
         return loss
+
+    def build_vars(self):
+        nil_word_slot = torch.zeros(1, self._embedding_size)
+        nil_rel_slot = torch.zeros(1, self._embedding_size)
+
+        self.E = nn.Parameter(
+            torch.cat(
+                (nil_word_slot,
+                 nn.init.xavier_normal_(
+                     torch.Tensor(self._ent_size - 1, self._embedding_size))),
+                dim=0))
+        self.Q = nn.Parameter(
+            torch.cat((nil_word_slot,
+                       nn.init.xavier_normal_(
+                           torch.Tensor(self._vocab_size - 1,
+                                        self._embedding_size))),
+                      dim=0))
+        self.R = nn.Parameter(
+            torch.cat(
+                (nil_rel_slot,
+                 nn.init.xavier_normal_(
+                     torch.Tensor(self._rel_size - 1, self._embedding_size))),
+                dim=0))
+        
+        self.E = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._ent_size, self._embedding_size)))
+        self.Q = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._vocab_size, self._embedding_size)))
+        self.R = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._rel_size, self._embedding_size)))
+
+        self.Mrq = nn.Parameter(
+            nn.init.xavier_normal_(
+                torch.Tensor(self._embedding_size, self._embedding_size)))
+        self.Mrs = nn.Parameter(
+            nn.init.xavier_normal_(
+                torch.Tensor(self._embedding_size, self._embedding_size)))
+        self.Mse = nn.Parameter(
+            nn.init.xavier_normal_(
+                torch.Tensor(self._embedding_size, self._embedding_size)))
+
+        self._zeros = torch.zeros(1)
