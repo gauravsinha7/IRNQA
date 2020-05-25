@@ -116,3 +116,30 @@ class IRN(nn.Module):
         Similar = torch.matmul(torch.matmul(self.R, self.Mrq), self.Q.t())
         _, idx = torch.topk(Similar, 5)
         return idx
+
+    def batch_pretrain(self, KBs, queries, answers, answers_id, paths):
+        nexample = KBs.shape[0]
+        keys = np.repeat(np.reshape(np.arange(self._rel_size), [1, -1]),
+                         nexample,
+                         axis=0)
+        pad = np.random.randint(low=0, high=self._ent_size, size=nexample)
+        ones = np.ones(nexample)
+        zeros = np.zeros(nexample)
+
+        h = torch.Tensor(KBs[:, 0])
+        r = torch.Tensor(KBs[:, 1])
+        t = torch.Tensor(KBs[:, 2])
+        tt = torch.Tensor(pad)
+        h_emb = self.E[h.long()]
+        r_emb = self.R[r.long()]
+        t_emb = self.E[t.long()]
+        tt_emb = self.E[tt.long()]
+        l_emb = torch.matmul((h_emb + r_emb), self.Mse)
+        s = (l_emb - t_emb) * (l_emb - t_emb)
+        ss = (l_emb - tt_emb) * (l_emb - tt_emb)
+
+        loss = self._margin + torch.sum(s, dim=1) - torch.sum(ss, dim=1)
+        loss = torch.clamp(loss, min=0)
+
+        loss = torch.sum(loss)
+        return loss
