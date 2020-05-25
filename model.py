@@ -111,3 +111,8 @@ class IRN(nn.Module):
                 torch.Tensor(self._embedding_size, self._embedding_size)))
 
         self._zeros = torch.zeros(1)
+
+    def match(self):
+        Similar = torch.matmul(torch.matmul(self.R, self.Mrq), self.Q.t())
+        _, idx = torch.topk(Similar, 5)
+        return idx
