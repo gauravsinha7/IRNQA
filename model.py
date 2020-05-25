@@ -76,7 +76,7 @@ class IRN(nn.Module):
     def build_vars(self):
         nil_word_slot = torch.zeros(1, self._embedding_size)
         nil_rel_slot = torch.zeros(1, self._embedding_size)
-
+        '''
         self.E = nn.Parameter(
             torch.cat(
                 (nil_word_slot,
@@ -95,7 +95,7 @@ class IRN(nn.Module):
                  nn.init.xavier_normal_(
                      torch.Tensor(self._rel_size - 1, self._embedding_size))),
                 dim=0))
-        
+        '''
         self.E = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._ent_size, self._embedding_size)))
         self.Q = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._vocab_size, self._embedding_size)))
         self.R = nn.Parameter(nn.init.xavier_normal_(torch.Tensor(self._rel_size, self._embedding_size)))
