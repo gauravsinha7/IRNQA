@@ -50,7 +50,7 @@ Validation Accuracy: 72.6721
 * utils.py :  Implements the position encoding.
 
 # Interpretable Reasoning Network [Architecture]
-![Alt text](./IR-network.png?raw=true "Title")
+![Alt text](https://github.com/gaurav952/IRNQA/blob/master/png/IR-network.png)
 
 
 
