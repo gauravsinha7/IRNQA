@@ -43,8 +43,8 @@ The code structure is as follows:
 ```
 -----------------------
 Epoch 10000
-Train Accuracy: 80.31\%
-Validation Accuracy: 72.6721\%
+Train Accuracy: 80.31
+Validation Accuracy: 72.6721
 -----------------------
 ```
 
