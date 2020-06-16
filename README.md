@@ -31,6 +31,22 @@ If you find the IRNQA useful, please cite the paper:
     * The model is more interpretable than existing reasoning networks in that the intermediate entities and relations predicted by the hop-by-hop reasoning process construct traceable reasoning paths to clearly reveal how the answer is derived.
     
 ## Implementation
+For implementation I have used following major libraries:
+* Pytorch
+* Numpy
+* Scikit-Learn
+
+The code structure is as follows:
+* model.py : This file contains the model and architecture for implementation
+* preprocess.py : Loads and reads the data and formats it in for input to model.
+* train.py : Used to train the model and predict the various summary parameters as described below:
+```
+-----------------------
+Epoch 10000
+Train Accuracy: 80.31\%
+Validation Accuracy: 72.6721\%
+-----------------------
+```
 
 
 
