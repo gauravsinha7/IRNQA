@@ -28,7 +28,10 @@ If you find the IRNQA useful, please cite the paper:
 * In comparison, reasoning over multiple fact triples is required to answer multi-relation questions such as “Name a soccer player who plays at forward position at the club Borussia Dortmund.” where more than one entity and relation are mentioned. Compared to single-relation QA, multi-relation QA is yet to be addressed.
 * The paper has two major contributions:
     * An Interpretable Reasoning Network which can make reasoning on multi-relation ques- tions with multiple triples in KB. Results show that our model obtains state-of-the-art performance.
-    *The model is more interpretable than existing reasoning networks in that the intermediate entities and relations predicted by the hop-by-hop reasoning process construct traceable reasoning paths to clearly reveal how the answer is derived.
+    * The model is more interpretable than existing reasoning networks in that the intermediate entities and relations predicted by the hop-by-hop reasoning process construct traceable reasoning paths to clearly reveal how the answer is derived.
+    
+## Implementation
+
 
 
 
